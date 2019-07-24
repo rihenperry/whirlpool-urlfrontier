@@ -1,0 +1,10 @@
+.gitignore
+.git/
+.idea/
+Makefile
+pom.xml
+*-docker-compose.yml
+src/
+target/
+!target/whirlpool-urlfrontier-1.0-SNAPSHOT.jar
+README.md

@@ -1,1 +1,4 @@
 .git/
+.idea/
+prod-docker-compose.yml
+target/

@@ -1,0 +1,19 @@
+version: '3.7'
+
+networks:
+  default:
+    external:
+      name: whirlpool-net
+
+
+services:
+
+  whirlpool-urlfrontier:
+    container_name: whirlpool-urlfrontier
+    entrypoint: java -cp whirlpool-urlfrontier-1.0-SNAPSHOT.jar crawler.whirlpool.urlfrontier.App
+    environment:
+      - MAVEN_CONFIG=/var/maven/.m2
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    restart: on-failure

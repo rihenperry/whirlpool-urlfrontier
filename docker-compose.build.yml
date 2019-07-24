@@ -1,0 +1,44 @@
+version: '2.4'
+
+networks:
+  default:
+    external:
+      name: whirlpool-net
+
+services:
+
+  base:
+    image: maven:3.6.1-jdk-13
+    command: bash -c " useradd --create-home --shell /bin/bash whirlpool  && chown -R whirlpool:whirlpool /home/whirlpool/whirlpool-urlfrontier"
+    volumes:
+      - .:/home/whirlpool/whirlpool-urlfrontier
+      - wh-urlfrontier-mvn-local-repo:/var/maven/.m2
+    working_dir: /home/whirlpool/whirlpool-urlfrontier
+    environment:
+      - MAVEN_CONFIG=/var/maven/.m2
+    networks:
+      - default
+
+  compile:
+    extends:
+      service: base
+    command: mvn -Duser.home=/var/maven compile
+
+  package:
+    extends:
+      service: base
+    command: mvn -Duser.home=/var/maven clean package
+
+  run:
+    extends:
+      service: base
+    command: java -cp target/whirlpool-urlfrontier-1.0-SNAPSHOT.jar crawler.whirlpool.urlfrontier.App
+
+  cli:
+    extends:
+      service: base
+    command: gpasswd -d whirlpool whirlpool
+
+volumes:
+  wh-urlfrontier-mvn-local-repo:
+    external: true
