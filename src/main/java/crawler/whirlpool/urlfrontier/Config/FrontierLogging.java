@@ -1,4 +1,4 @@
-package crawler.whirlpool.urlfrontier;
+package crawler.whirlpool.urlfrontier.Config;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -17,7 +17,6 @@ public enum FrontierLogging {
     private LoggerContext ctx;
 
     private FrontierLogging() {
-        System.out.println("log2j invoked!");
         ConfigurationBuilder<BuiltConfiguration> builder = ConfigurationBuilderFactory.newConfigurationBuilder();
         this.configName = "URLFrontierLogging";
         builder.setConfigurationName(this.configName);

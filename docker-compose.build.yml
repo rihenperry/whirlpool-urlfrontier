@@ -25,12 +25,17 @@ services:
       service: base
     command: mvn -Duser.home=/var/maven compile
 
+  run:
+    extends:
+      service: base
+    command: mvn exec:java -Dexec.mainClass="crawler.whirlpool.urlfrontier.Main"
+
   package:
     extends:
       service: base
     command: mvn -Duser.home=/var/maven clean package
 
-  run:
+  package-run:
     extends:
       service: base
     command: java -cp target/whirlpool-urlfrontier-1.0-SNAPSHOT-jar-with-dependencies.jar crawler.whirlpool.urlfrontier.Main

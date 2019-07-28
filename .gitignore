@@ -3,3 +3,5 @@
 prod-docker-compose.yml
 target/
 logs/*
+src/main/resources/config.json
+src/main/resources/rmqconfig.properties

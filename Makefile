@@ -7,6 +7,9 @@ compile:
 package:
 	docker-compose -f docker-compose.build.yml run --rm package
 
+package-run:
+	docker-compose -f docker-compose.build.yml run --rm package-run
+
 cli:
 	docker-compose -f docker-compose.build.yml run --rm cli
 
