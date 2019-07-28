@@ -16,6 +16,7 @@ services:
     working_dir: /home/whirlpool/whirlpool-urlfrontier
     environment:
       - MAVEN_CONFIG=/var/maven/.m2
+      - JAVA_ENV=development
     networks:
       - default
 
@@ -32,12 +33,12 @@ services:
   run:
     extends:
       service: base
-    command: java -cp target/whirlpool-urlfrontier-1.0-SNAPSHOT.jar crawler.whirlpool.urlfrontier.App
+    command: java -cp target/whirlpool-urlfrontier-1.0-SNAPSHOT-jar-with-dependencies.jar crawler.whirlpool.urlfrontier.Main
 
   cli:
     extends:
       service: base
-    command: gpasswd -d whirlpool whirlpool
+    command: mvn versions:display-dependency-updates
 
 volumes:
   wh-urlfrontier-mvn-local-repo:

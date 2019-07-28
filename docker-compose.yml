@@ -10,9 +10,11 @@ services:
 
   whirlpool-urlfrontier:
     container_name: whirlpool-urlfrontier
-    entrypoint: java -cp whirlpool-urlfrontier-1.0-SNAPSHOT.jar crawler.whirlpool.urlfrontier.App
+    entrypoint: java -cp whirlpool-urlfrontier-1.0-SNAPSHOT-jar-with-dependencies.jar crawler.whirlpool.urlfrontier.Main
     environment:
       - MAVEN_CONFIG=/var/maven/.m2
+      - JAVA_ENV=development
+
     build:
       context: ./
       dockerfile: Dockerfile

@@ -2,3 +2,4 @@
 .idea/
 prod-docker-compose.yml
 target/
+logs/*

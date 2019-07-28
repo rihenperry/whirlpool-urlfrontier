@@ -8,7 +8,7 @@ package:
 	docker-compose -f docker-compose.build.yml run --rm package
 
 cli:
-	docker-compose -f docker-compose.build.yml run --rm --user whirlpool cli
+	docker-compose -f docker-compose.build.yml run --rm cli
 
 build:
 	docker build --no-cache -t whirlpool-urlfrontier:latest .

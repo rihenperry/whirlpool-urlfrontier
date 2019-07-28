@@ -11,8 +11,7 @@ RUN useradd --create-home --shell /bin/bash whirlpool \
 COPY logs/ logs/
 
 # copy ready-to-go target development under development java docker environment
-COPY target/whirlpool-urlfrontier-1.0-SNAPSHOT.jar whirlpool-urlfrontier-1.0-SNAPSHOT.jar
-
+COPY target/whirlpool-urlfrontier-1.0-SNAPSHOT-jar-with-dependencies.jar whirlpool-urlfrontier-1.0-SNAPSHOT-jar-with-dependencies.jar
 
 # docker image for dev/prod target
-ENTRYPOINT ["java", "-cp", "whirlpool-urlfrontier-1.0-SNAPSHOT.jar", "crawler.whirlpool.urlfrontier.App"]
+ENTRYPOINT ["java", "-cp", "whirlpool-urlfrontier-1.0-SNAPSHOT-jar-with-dependencies.jar", "crawler.whirlpool.urlfrontier.Main"]
