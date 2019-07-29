@@ -14,26 +14,20 @@ public class Main
     private static final Logger filelog= FrontierLogging.INSTANCE
             .getInstance()
             .getLogger("FrontierFileLogger");
+    private static Channel systemChannel;
+    private static Channel frontierChannel;
 
-
-    public static void main( String[] args )
+    public static void main( String[] args ) throws Exception
     {
 
         System.out.println("JAVA_ENV= " + System.getenv("JAVA_ENV"));
 
-        ConnectionFactory factory = new ConnectionFactory();
-        stdlog.debug("this is debug level");
-        stdlog.info("this is info level");
-        filelog.error("this is error level");
-        filelog.fatal("this is fatal level");
-        stdlog.warn("this is warn level");
-
-        Channel systemChannel = RMQAuth.INSTANCE
+        systemChannel = RMQAuth.INSTANCE
                 .getInstance()
-                .getSystemRMQChannel();
+                .createSystemRMQChannel();
 
-        Channel frontierChannel = RMQAuth.INSTANCE
+        frontierChannel = RMQAuth.INSTANCE
                 .getInstance()
-                .getFrontierRMQChannel();
+                .createFrontierRMQChannel();
     }
 }
