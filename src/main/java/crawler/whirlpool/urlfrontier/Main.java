@@ -1,33 +1,45 @@
 package crawler.whirlpool.urlfrontier;
 
 import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.ConnectionFactory;
-import crawler.whirlpool.urlfrontier.Config.FrontierLogging;
-import crawler.whirlpool.urlfrontier.Config.RMQAuth;
+import crawler.whirlpool.urlfrontier.config.FrontierLogging;
+import crawler.whirlpool.urlfrontier.config.RMQAuth;
+import crawler.whirlpool.urlfrontier.scheme.BqSelector;
+import crawler.whirlpool.urlfrontier.scheme.FqBiasedRamdomizer;
+import crawler.whirlpool.urlfrontier.scheme.FqPrioritizer;
 import org.apache.logging.log4j.Logger;
+
+import java.io.IOException;
 
 public class Main
 {
-    private static final Logger stdlog = FrontierLogging.INSTANCE
-            .getInstance()
+    private static final Logger stdlog = FrontierLogging.INSTANCE.getInstance()
             .getLogger("FrontierConsoleLogger");
-    private static final Logger filelog= FrontierLogging.INSTANCE
-            .getInstance()
+    private static final Logger filelog= FrontierLogging.INSTANCE.getInstance()
             .getLogger("FrontierFileLogger");
     private static Channel systemChannel;
     private static Channel frontierChannel;
 
-    public static void main( String[] args ) throws Exception
+    public static void main( String[] args )
     {
 
-        System.out.println("JAVA_ENV= " + System.getenv("JAVA_ENV"));
+        stdlog.info("using {} settings", System.getenv("JAVA_ENV"));
 
-        systemChannel = RMQAuth.INSTANCE
-                .getInstance()
-                .createSystemRMQChannel();
+        try {
+            systemChannel = RMQAuth.INSTANCE.getInstance().createSystemRMQChannel();
+            frontierChannel = RMQAuth.INSTANCE.getInstance().createFrontierRMQChannel();
+            Main exec = new Main();
+            exec.go();
 
-        frontierChannel = RMQAuth.INSTANCE
-                .getInstance()
-                .createFrontierRMQChannel();
+        } catch (IOException ioError) {
+            filelog.error("io error when getting RMQ channels for main class {}", ioError.getMessage());
+        }
+    }
+
+    public void go() {
+        FqBiasedRamdomizer fqbiased = new FqBiasedRamdomizer();
+        BqSelector bqselector = new BqSelector();
+
+        fqbiased.start();
+        bqselector.start();
     }
 }

@@ -1,4 +1,4 @@
-package crawler.whirlpool.urlfrontier.Config;
+package crawler.whirlpool.urlfrontier.config;
 
 
 import com.rabbitmq.client.Channel;
@@ -95,6 +95,7 @@ public enum RMQAuth {
         try {
             ConnectionFactory factory = new ConnectionFactory();
             factory.setUri(uri);
+            factory.setAutomaticRecoveryEnabled(true);
             conn = factory.newConnection();
         } catch (URISyntaxException uriError) {
             filelog.error("URI Syntax {}", uriError.getStackTrace());
@@ -126,6 +127,6 @@ public enum RMQAuth {
         Channel frontierChannel = this.frontierRMQConnection.createChannel();
         stdlog.info("created channel for user {} ",
                     this.frontierVhostURI.get("user"));
-        return  frontierChannel;
+        return frontierChannel;
     }
 }
