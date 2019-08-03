@@ -84,8 +84,7 @@ public class FqBiasedRamdomizer extends Thread implements ConsumeManualAckAfterP
         try {
             this.consumeFrontQueues();
         } catch (InterruptedException interrupt) {
-            stdlog.warn("running thread {} interrupted {}", this.getName(),
-                    interrupt.getMessage());
+            stdlog.warn("running thread interrupted {}", interrupt.getMessage());
         } catch (IOException ioerror) {
             filelog.error("Caught io error when comsuming pull style message from fron.queues {}",
                     ioerror.getMessage());
