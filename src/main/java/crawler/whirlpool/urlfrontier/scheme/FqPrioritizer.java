@@ -24,7 +24,7 @@ public class FqPrioritizer implements ConsumeManualAckAfterPub {
     private Channel frontierChannel;
 
     long pubAckcount = 0;
-    volatile Map<Long, Long> consumeAckSet = Collections.synchronizedSortedMap(new TreeMap<Long, Long>());
+    Map<Long, Long> consumeAckSet = Collections.synchronizedSortedMap(new TreeMap<Long, Long>());
 
     public FqPrioritizer() {
         this.initChannels();
@@ -38,7 +38,17 @@ public class FqPrioritizer implements ConsumeManualAckAfterPub {
 
             this.systemChannel.basicQos(1);
             this.frontierChannel.confirmSelect();
-            this.frontierChannel.addConfirmListener(new RamdomPubSubConfirmListener(this));
+            this.frontierChannel.addConfirmListener(new PubSubAckListener(this) {
+                @Override
+                public Map<Long, Long> getConsumeAckSet() {
+                    return consumeAckSet;
+                }
+
+                @Override
+                public String getAckHandle() {
+                    return "FqRandomizer";
+                }
+            });
 
             // declare dynamic front queues which control crawler priority. Note that queues are idempotent
             // queue config name, durable=true, exclusive=false, auto-delete=false, args={x-queue-mode: memory}
@@ -103,7 +113,8 @@ public class FqPrioritizer implements ConsumeManualAckAfterPub {
 
     @Override
     public void manualNAck(long tag) throws IOException {
-        stdlog.warn("consumer tag not ack {}", tag);
+        this.systemChannel.basicNack(tag, true, false);
+        filelog.error("manualNack consumer tag not ack {}", tag);
     }
 
     private void publishToRamdomizer(long delTag, JSONObject payload) throws IOException {
@@ -152,58 +163,6 @@ public class FqPrioritizer implements ConsumeManualAckAfterPub {
         // map pub confirms to consume ack tag
         if (pubAckcount != 0) {
             consumeAckSet.put(pubAckcount, delTag);
-        }
-
-
-        // this is the decode of above message at the consumer end
-        //JSONObject obj = new JSONObject(IOUtils.toString(new ByteArrayInputStream(b), StandardCharsets.UTF_8));
-    }
-
-    class RamdomPubSubConfirmListener implements ConfirmListener {
-        private ConsumeManualAckAfterPub consumer;
-
-        RamdomPubSubConfirmListener(ConsumeManualAckAfterPub consumer) {
-            this.consumer = consumer;
-        }
-        @Override
-        public void handleAck(long seqNo, boolean b) throws IOException {
-            //long manualAck = ackSet.contains(seqNo) == true? seqNo: -1;
-            long consumeTag = consumeAckSet.containsKey(seqNo) == true? consumeAckSet.get(seqNo): -1;
-
-            if (consumeTag > 0) {
-                stdlog.debug("handle ack: found consumeAckset element {}, pubconfirm seq No {}, boolean {}", consumeTag, seqNo, b);
-                consumeAckSet.remove(seqNo);
-                this.consumer.manualAck(consumeTag);
-            } else {
-                stdlog.warn("handle ack: not found consumeAckset element {}, pubconfirm seq No {}, boolean {}", consumeTag, seqNo, b);
-            }
-
-//            Iterator<Long> elm = ackSet.iterator();
-//            while (elm.hasNext())
-//                stdlog.info("puback set inside pub listener handle ack {}, seqNo {}, bool {}",
-//                        elm.next(),
-//                        seqNo,
-//                        b);
-
-//            if (b) {
-//                stdlog.info("multiple pub confirm handleAck long seq no={}, boolean b={}", seqNo, b);
-
-//                for (long i = ackSet.first(); i <= seqNo; ++i) {
-//                    ackSet.remove(i);
-//                }
-//            } else {
-//                stdlog.info("single pub confirm handleAck long seq no={}, boolean b={} ", seqNo, b);
-//                ackSet.remove(seqNo);
-//            }
-        }
-
-        @Override
-        public void handleNack(long l, boolean b) {
-            if (b) {
-                stdlog.warn("multiple pub confirm No Ack handler long seq no={}, boolean b={}",l, b);
-            } else {
-                stdlog.warn("single No Ack handler long seq no={}, boolean b={} ",l, b);
-            }
         }
     }
 }
