@@ -3,30 +3,30 @@
 steps to build and push the service after pulling the repository.
 
 `
-docker build --no-cache -t whirlpool-urlfrontier-dev:latest --target whirlpool-urlfrontier-dev .
+docker build --no-cache -t whirlpool-urlfrontier:latest --target whirlpool-urlfrontier .
 `
 
 `
-docker tag whirlpool-urlfrontier-dev:latest rihbyne/whirlpool-urlfrontier-dev:latest
+docker tag whirlpool-urlfrontier:latest rihbyne/whirlpool-urlfrontier:latest
 `
 
 `
-docker push rihbyne/whirlpool-urlfrontier-dev:latest
+docker push rihbyne/whirlpool-urlfrontier:latest
 `
 
 `
-docker-compose -f dev-docker-compose.yml build --no-cache whirlpool-urlfrontier
+docker-compose -f docker-compose.yml build --no-cache whirlpool-urlfrontier
 `
 
 start the container with build flag in detach mode (will build all the images before starting)
 
 `
-docker-compose -f dev-docker-compose.yml up --build -d whirlpool-urlfrontier
+docker-compose -f docker-compose.yml up --build -d whirlpool-urlfrontier
 `
 
 stop the container by removing non-running containers 
 `
-docker-compose -f dev-docker-compose.yml down --remove-orphans
+docker-compose -f docker-compose.yml down --remove-orphans
 `
 
 Start with no dependencies

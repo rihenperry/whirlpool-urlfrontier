@@ -17,7 +17,7 @@ build:
 	docker build --no-cache -t whirlpool-urlfrontier:latest .
 
 prod-build:
-	docker build --no-cache -t whirlpool-urlfrontier-prod:latest --target whirlpool-urlfrontier-prod .
+	docker build --no-cache -t whirlpool-urlfrontier-prod:latest .
 
 up:
 	docker-compose --build -d
@@ -39,3 +39,6 @@ push:
 
 push-prod:
 	docker push rihbyne/whirlpool-urlfrontier-prod:latest
+
+tag-prod:
+	docker tag whirlpool-urlfrontier-prod:latest rihbyne/whirlpool-urlfrontier-prod:latest

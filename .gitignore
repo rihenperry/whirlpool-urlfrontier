@@ -5,3 +5,4 @@ target/
 logs/*
 src/main/resources/config.json
 src/main/resources/rmqconfig.properties
+*.jar
