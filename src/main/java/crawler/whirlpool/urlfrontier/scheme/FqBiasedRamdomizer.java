@@ -27,10 +27,10 @@ public class FqBiasedRamdomizer extends Thread implements ConsumeManualAckAfterP
     static {
         // make this more sophisticated, also used by other thread in urlfrontier
         BQ_LOOKUP = new HashMap<>();
-        BQ_LOOKUP.put("ex1.com", 1);
-        BQ_LOOKUP.put("ex4.com", 2);
-        BQ_LOOKUP.put("ex10.com", 3);
-        BQ_LOOKUP.put("ex3.com", 2);
+        BQ_LOOKUP.put("dice.com", 1);
+        BQ_LOOKUP.put("simplyhired.com", 2);
+        BQ_LOOKUP.put("monster.com", 3);
+        BQ_LOOKUP.put("job-openings.monster.com", 3);
     }
 
     private static final Logger stdlog = FrontierLogging.INSTANCE.getInstance()
